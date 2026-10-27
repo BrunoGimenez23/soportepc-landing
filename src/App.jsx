@@ -8,19 +8,15 @@ import {
   Thermometer,
   HardDrive,
   Shield,
-  Truck,
+  Headphones,
+  MessageCircle,
 } from "lucide-react";
 
 const LOGO_SRC = `${import.meta.env.BASE_URL}logo-soportepc.png`;
 
 const WA_NUMBER = import.meta.env.VITE_WA_NUMBER || "598XXXXXXXX"; // sin +, sin espacios
 const WA_TEXT = encodeURIComponent(
-  "Hola! Quiero consultar por reparación de PC/notebook.\n\n" +
-    "• Zona: Cordón / cercanías\n" +
-    "• Equipo (marca/modelo): \n" +
-    "• Problema (detalle): \n" +
-    "• ¿Enciende? ¿Da error? (si aplica): \n" +
-    "• ¿Querés mantener archivos? (sí/no): \n"
+  "Hola, quiero consultar por un problema con mi computadora."
 );
 const WA_LINK = `https://wa.me/${WA_NUMBER}?text=${WA_TEXT}`;
 
@@ -34,19 +30,19 @@ const NAV_ITEMS = [
   { href: "#faq", label: "FAQ" },
 ];
 
-const HERO_BADGES = ["Atención con turno", "Cordón y alrededores", "Presupuesto antes de avanzar"];
+const HERO_BADGES = ["Recepción con coordinación", "Soporte remoto", "Presupuesto previo"];
 
 const HERO_CARDS = [
   { title: "PC lenta", desc: "Arranque lento, errores, falta de espacio, programas pesados." },
   { title: "Notebook caliente", desc: "Limpieza interna y pasta térmica para bajar temperatura." },
   { title: "Actualizar a SSD", desc: "Instalación y clonación para mejorar rendimiento." },
-  { title: "Home office", desc: "Setup estable: drivers, impresoras, Wi-Fi, backups." },
+  { title: "Soporte remoto", desc: "Ayuda con Windows, programas, impresoras y configuraciones." },
 ];
 
 const TRUST_POINTS = [
-  { title: "Formación BIOS", desc: "Base técnica para diagnósticos y procedimientos correctos." },
+  { title: "Formación técnica", desc: "Formación en soporte IT y desarrollo de software." },
   { title: "Presupuesto antes de avanzar", desc: "Confirmo costos y opciones antes de hacer cambios." },
-  { title: "Garantía por escrito", desc: "Software y mano de obra. Repuestos según proveedor." },
+  { title: "Condiciones claras", desc: "Informo alcance, presupuesto y condiciones de garantía antes del trabajo." },
   { title: "Trabajo prolijo", desc: "Pruebas finales de estabilidad/rendimiento/temperaturas." },
 ];
 
@@ -65,26 +61,26 @@ const SERVICES = [
 ];
 
 const PRICES = [
-  { service: "Diagnóstico", price: "$ 900", note: "Se descuenta si realizás el trabajo." },
+  { service: "Diagnóstico", price: "$ 700", fixed: true, note: "Se descuenta de la mano de obra si realizamos la reparación." },
   { service: "Optimización / puesta a punto", price: "$ 1.500" },
   { service: "Formateo + instalación", price: "$ 2.200", note: "Drivers + configuración inicial." },
   { service: "Limpieza interna + pasta térmica", price: "$ 1.800" },
   { service: "Instalación SSD / clonación", price: "$ 2.000", note: "SSD aparte." },
-  { service: "Instalación RAM", price: "$ 1.200" },
+  { service: "Instalación RAM", price: "$ 1.200", note: "Memoria aparte." },\n  { service: "Soporte técnico remoto", price: "$ 600", note: "Según el problema y la duración." },
 ];
 
 const PROCESS_STEPS = [
   ["1", "WhatsApp", "Me escribís con el problema y el modelo del equipo."],
-  ["2", "Turno", "Coordinamos horario (entrega/retiro coordinado en la zona)."],
+  ["2", "Coordinación", "Coordinamos la recepción del equipo o una sesión de soporte remoto."],
   ["3", "Diagnóstico", "Te paso el presupuesto antes de hacer cambios."],
   ["4", "Reparación", "Trabajo + pruebas (rendimiento/temperaturas/estabilidad)."],
-  ["5", "Entrega", "Te entrego el equipo y la garantía del trabajo realizado."],
+  ["5", "Finalización", "Probamos el resultado y coordinamos la devolución del equipo si corresponde."],
 ];
 
 const FAQS = [
   {
     q: "¿Cuánto demora?",
-    a: "Depende del caso. La mayoría de trabajos comunes se resuelven en 24–72h, sujeto a disponibilidad y repuestos.",
+    a: "Depende del problema, la disponibilidad y los repuestos. Te informo el plazo estimado después de revisar el caso.",
   },
   { q: "¿Perderé mis archivos?", a: "Siempre consulto antes. Si hay riesgo, propongo backup o recuperación como primer paso." },
   { q: "¿Trabajás con turno?", a: "Sí. Coordinamos por WhatsApp para atender prolijo y sin esperas." },
@@ -93,7 +89,7 @@ const FAQS = [
     a: "Sí, coordinado en Cordón y cercanías según disponibilidad. Te confirmo horario y punto por WhatsApp.",
   },
   { q: "¿Trabajás con Windows y Linux?", a: "Sí. Windows y Linux. (Mac: a confirmar según caso.)" },
-  { q: "¿Das garantía?", a: "Sí, en trabajos de software y mano de obra. Repuestos según garantía del proveedor." },
+  { q: "¿Das garantía?", a: "Las condiciones de garantía se informan antes del trabajo y dependen del servicio realizado. Los repuestos tienen la garantía de su proveedor." },
   {
     q: "¿Cómo pido presupuesto?",
     a: "Escribime por WhatsApp con el problema, modelo del equipo y si querés, una foto/video del error.",
@@ -138,7 +134,7 @@ function Card({ title, desc, Icon }) {
   );
 }
 
-function PriceRow({ service, price, note }) {
+function PriceRow({ service, price, note, fixed = false }) {
   return (
     <div className="flex flex-col gap-1 border-b border-slate-100 py-4 sm:flex-row sm:items-center sm:justify-between">
       <div>
@@ -146,7 +142,7 @@ function PriceRow({ service, price, note }) {
         {note && <p className="text-sm text-slate-500">{note}</p>}
       </div>
       <p className="text-slate-700">
-        Desde <span className="font-bold">{price}</span>
+        {!fixed && "Desde "}<span className="font-bold">{price}</span>
       </p>
     </div>
   );
@@ -247,7 +243,7 @@ export default function App() {
             </div>
 
             <h1 className="mt-4 text-3xl font-black tracking-tight text-slate-900 sm:text-5xl">
-              Reparación de PC y notebooks en Cordón
+              Reparación de PC y notebooks en Cordón, Montevideo
             </h1>
 
             <p className="mt-4 text-base leading-relaxed text-slate-600">
@@ -329,7 +325,7 @@ export default function App() {
 
           <div className="mx-auto mt-10 max-w-3xl rounded-3xl border border-slate-200 bg-white p-6 shadow-sm">
             {PRICES.map((row) => (
-              <PriceRow key={row.service} service={row.service} price={row.price} note={row.note} />
+              <PriceRow key={row.service} {...row} />
             ))}
 
             <PrimaryButton href={WA_LINK} className="mt-6 w-full">
@@ -347,7 +343,7 @@ export default function App() {
       {/* Cómo trabajo */}
       <section id="como-trabajo" className="scroll-mt-24 border-t border-slate-200 bg-white">
         <div className="mx-auto max-w-6xl px-4 py-14">
-          <SectionTitle kicker="Proceso" title="Cómo trabajamos" subtitle="Simple, claro y con control del presupuesto." />
+          <SectionTitle kicker="Proceso" title="Cómo trabajo" subtitle="Simple, claro y con control del presupuesto." />
 
           <div className="mt-10 grid gap-4 md:grid-cols-5">
             {PROCESS_STEPS.map(([n, t, d]) => (
@@ -371,7 +367,7 @@ export default function App() {
                   Cordón, Centro, Tres Cruces, La Comercial y alrededores
                 </p>
                 <p className="mt-2 text-sm text-slate-600">
-                  Atención con turno. Retiro/entrega coordinado según disponibilidad.
+                  Recepción de equipos con coordinación previa. No realizo visitas a domicilio. También ofrezco soporte remoto.
                 </p>
               </div>
               <PrimaryButton href={WA_LINK} className="px-5 py-3">
@@ -446,6 +442,18 @@ export default function App() {
           </p>
         </div>
       </footer>
+
+      {/* Acceso rápido a WhatsApp desde cualquier sección */}
+      <a
+        href={WA_LINK}
+        target="_blank"
+        rel="noopener noreferrer"
+        aria-label="Consultar a SoportePC Cordón por WhatsApp"
+        className="fixed bottom-5 right-5 z-50 flex items-center gap-2 rounded-full bg-green-600 px-4 py-3 font-bold text-white shadow-lg transition hover:bg-green-700 focus:outline-none focus:ring-4 focus:ring-green-200"
+      >
+        <MessageCircle className="h-5 w-5" aria-hidden="true" />
+        <span className="hidden sm:inline">Consultanos</span>
+      </a>
     </div>
   );
 }
